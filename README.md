@@ -6,144 +6,187 @@ A RESTful Task Management API built with **Python**, **Django**, and **Django Re
 
 ## Tech Stack
 
-| Layer | Technology |
-|---|---|
-| Language | Python |
-| Framework | Django, Django Rest Framework (DRF) |
-| Authentication | Django SimpleJWT |
-| Database | PostgreSQL / MySQL |
-| Background Tasks | Celery + Redis *(optional)* |
+| Layer            | Technology                          |
+| ---------------- | ----------------------------------- |
+| Language         | Python                              |
+| Framework        | Django, Django Rest Framework (DRF) |
+| Authentication   | Django SimpleJWT                    |
+| Database         | PostgreSQL / MySQL                  |
+| Background Tasks | Celery + Redis (Optional)           |
 
 ---
 
 ## Features
 
 ### Authentication & Authorization
-- JWT-based authentication via `djangorestframework-simplejwt`
-- - Role-based access control with DRF permissions
-  - - Secure token refresh and token blacklisting support
-   
-    - ### Task CRUD
-    - - Full Create, Read, Update, Delete operations via RESTful endpoints
-      - - DRF serializers and viewsets for clean, consistent API design
-       
-        - ### User-Specific Task Visibility
-        - - Tasks are scoped to the authenticated user
-          - - Queryset-level filtering ensures users only see their own data
-           
-            - ### Priority & Status
-            - - **Status:** `Todo` | `In Progress` | `Done`
-              - - **Priority:** `Low` | `Medium` | `High`
-                - - Implemented using Django model enums / `choices`
-                 
-                  - ---
 
-                  ## Getting Started
+* JWT-based authentication using `djangorestframework-simplejwt`
+* Role-based access control with DRF permissions
+* Secure token refresh mechanism
+* Token blacklisting support for enhanced security
 
-                  ### Prerequisites
+### Task CRUD Operations
 
-                  - Python 3.9+
-                  - - PostgreSQL or MySQL
-                    - - Redis *(if using Celery)*
-                     
-                      - ### Installation
-                     
-                      - ```bash
-                        # 1. Clone the repository
-                        git clone https://github.com/Nik719/task_management_app.git
-                        cd task_management_app
+* Create, Read, Update, and Delete tasks through RESTful APIs
+* DRF serializers for data validation and transformation
+* ViewSets and routers for clean API architecture
 
-                        # 2. Create and activate a virtual environment
-                        python -m venv venv
-                        source venv/bin/activate  # On Windows: venv\Scripts\activate
+### User-Specific Task Visibility
 
-                        # 3. Install dependencies
-                        pip install -r requirements.txt
+* Tasks are scoped to authenticated users
+* Queryset-level filtering ensures users only access their own tasks
 
-                        # 4. Configure environment variables
-                        cp .env.example .env
-                        # Edit .env with your database credentials and secret key
+### Task Status & Priority Management
 
-                        # 5. Apply migrations
-                        python manage.py migrate
+#### Status Options
 
-                        # 6. Create a superuser
-                        python manage.py createsuperuser
+* Todo
+* In Progress
+* Done
 
-                        # 7. Run the development server
-                        python manage.py runserver
-                        ```
+#### Priority Levels
 
-                        ---
+* Low
+* Medium
+* High
 
-                        ## API Endpoints
+Implemented using Django model `choices` for consistency and validation.
 
-                        ### Authentication
+---
 
-                        | Method | Endpoint | Description |
-                        |---|---|---|
-                        | `POST` | `/api/auth/register/` | Register a new user |
-                        | `POST` | `/api/auth/login/` | Obtain JWT access & refresh tokens |
-                        | `POST` | `/api/auth/token/refresh/` | Refresh access token |
+## Getting Started
 
-                        ### Tasks
+### Prerequisites
 
-                        | Method | Endpoint | Description |
-                        |---|---|---|
-                        | `GET` | `/api/tasks/` | List all tasks for the authenticated user |
-                        | `POST` | `/api/tasks/` | Create a new task |
-                        | `GET` | `/api/tasks/{id}/` | Retrieve a specific task |
-                        | `PUT` | `/api/tasks/{id}/` | Update a task |
-                        | `PATCH` | `/api/tasks/{id}/` | Partially update a task |
-                        | `DELETE` | `/api/tasks/{id}/` | Delete a task |
+* Python 3.9+
+* PostgreSQL or MySQL
+* Redis (Optional, for Celery)
 
-                        ---
+### Installation
 
-                        ## Environment Variables
+```bash
+# 1. Clone the repository
+git clone https://github.com/Nik719/task_management_app.git
+cd task_management_app
 
-                        Create a `.env` file in the project root:
+# 2. Create and activate a virtual environment
+python -m venv venv
 
-                        ```env
-                        SECRET_KEY=your-django-secret-key
-                        DEBUG=True
-                        DATABASE_URL=postgres://user:password@localhost:5432/taskdb
+# Linux / macOS
+source venv/bin/activate
 
-                        # Optional – Celery
-                        CELERY_BROKER_URL=redis://localhost:6379/0
-                        ```
+# Windows
+venv\Scripts\activate
 
-                        ---
+# 3. Install dependencies
+pip install -r requirements.txt
 
-                        ## Running Background Tasks (Optional)
+# 4. Configure environment variables
+cp .env.example .env
 
-                        If Celery is configured:
+# 5. Apply migrations
+python manage.py migrate
 
-                        ```bash
-                        # Start the Celery worker
-                        celery -A task_management_app worker --loglevel=info
-                        ```
+# 6. Create a superuser
+python manage.py createsuperuser
 
-                        ---
+# 7. Run the development server
+python manage.py runserver
+```
 
-                        ## Project Structure
+---
 
-                        ```
-                        task_management_app/
-                        ├── task_app/                # Core app – models, views, serializers
-                        │   ├── models.py
-                        │   ├── serializers.py
-                        │   ├── views.py
-                        │   └── urls.py
-                        ├── task_management_app/     # Project settings & configuration
-                        │   ├── settings.py
-                        │   └── urls.py
-                        ├── manage.py
-                        ├── requirements.txt
-                        └── docker-compose.yml
-                        ```
+## API Endpoints
 
-                        ---
+### Authentication
 
-                        ## License
+| Method | Endpoint                   | Description                          |
+| ------ | -------------------------- | ------------------------------------ |
+| POST   | `/api/auth/register/`      | Register a new user                  |
+| POST   | `/api/auth/login/`         | Obtain JWT access and refresh tokens |
+| POST   | `/api/auth/token/refresh/` | Refresh access token                 |
 
-                        This project is open-source and available under the [MIT License](LICENSE).
+### Tasks
+
+| Method | Endpoint           | Description                               |
+| ------ | ------------------ | ----------------------------------------- |
+| GET    | `/api/tasks/`      | List all tasks for the authenticated user |
+| POST   | `/api/tasks/`      | Create a new task                         |
+| GET    | `/api/tasks/{id}/` | Retrieve a specific task                  |
+| PUT    | `/api/tasks/{id}/` | Update a task                             |
+| PATCH  | `/api/tasks/{id}/` | Partially update a task                   |
+| DELETE | `/api/tasks/{id}/` | Delete a task                             |
+
+---
+
+## Environment Variables
+
+Create a `.env` file in the project root:
+
+```env
+SECRET_KEY=your-django-secret-key
+DEBUG=True
+DATABASE_URL=postgres://user:password@localhost:5432/taskdb
+
+# Optional - Celery
+CELERY_BROKER_URL=redis://localhost:6379/0
+```
+
+---
+
+## Running Background Tasks (Optional)
+
+If Celery is configured:
+
+```bash
+celery -A task_management_app worker --loglevel=info
+```
+
+---
+
+## Project Structure
+
+```text
+task_management_app/
+├── task_app/
+│   ├── models.py
+│   ├── serializers.py
+│   ├── views.py
+│   └── urls.py
+├── task_management_app/
+│   ├── settings.py
+│   └── urls.py
+├── manage.py
+├── requirements.txt
+└── docker-compose.yml
+```
+
+---
+
+## Future Enhancements
+
+* Email notifications and reminders
+* Task categories and tagging
+* File attachments
+* Team collaboration features
+* Activity logging and audit trails
+* Docker deployment support
+* CI/CD pipeline integration
+* Swagger / OpenAPI documentation
+
+---
+
+## License
+
+This project is licensed under the MIT License. See the LICENSE file for details.
+
+---
+
+## Author
+
+**Nikhil**
+
+* GitHub: https://github.com/Nik719
+* LinkedIn: https://linkedin.com/in/nikhilsaha719
+
+⭐ If you found this project useful, consider starring the repository.
